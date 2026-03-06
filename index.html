@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Afya Yangu — Daktari Mfukoni</title>
+<meta name="description" content="Ushauri wa afya kwa Kiswahili. Bure. Haraka. Salama.">
+<link rel="manifest" href="/afyayangu/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #00c896;
+  --green-dark: #009e78;
+  --green-glow: rgba(0,200,150,0.25);
+  --blue: #0ea5e9;
+  --red: #f43f5e;
+  --yellow: #fbbf24;
+  --bg: #050f0d;
+  --bg2: #0a1a16;
+  --bg3: #0f2420;
+  --card: rgba(255,255,255,0.04);
+  --card-hover: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --text: #e8f5f2;
+  --text2: #8ab3aa;
+  --text3: #4d7a71;
+  --font: 'Outfit', sans-serif;
+  --radius: 18px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND MESH ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(0,200,150,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(14,165,233,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SCREENS ── */
+.screen { display:none; min-height:100vh; position:relative; z-index:1; }
+.screen.active { display:flex; flex-direction:column; }
+
+/* ══════════════════════════════════════
+   LANDING SCREEN
+══════════════════════════════════════ */
+#screen-landing {
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Slideshow background */
+.slide-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.slide.active { opacity: 1; }
+
+/* Dark overlay over slides */
+.slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(5,15,13,0.75) 0%,
+    rgba(5,15,13,0.55) 40%,
+    rgba(5,15,13,0.85) 100%
+  );
+  z-index: 1;
+}
+
+/* Dots indicator */
+.slide-dots {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.slide-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: all 0.3s;
+}
+
+.slide-dot.active {
+  background: var(--green);
+  width: 20px;
+  border-radius: 3px;
+}
+
+/* Landing content above slides */
+#screen-landing > *:not(.slide-bg):not(.slide-dots) {
+  position: relative;
+  z-index: 2;
+}
+
+.landing-logo {
+  width: 80px; height: 80px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 24px;
+  box-shadow: 0 0 40px var(--green-glow);
+  animation: pulse-logo 3s ease-in-out infinite;
+}
+
+@keyframes pulse-logo {
+  0%,100% { box-shadow: 0 0 40px var(--green-glow); }
+  50% { box-shadow: 0 0 70px rgba(0,200,150,0.45); }
+}
+
+.landing-badge {
+  display: inline-block;
+  background: rgba(0,200,150,0.12);
+  border: 1px solid rgba(0,200,150,0.25);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+
+.landing-title {
+  font-size: clamp(32px, 8vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #fff 30%, var(--green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing-sub {
+  font-size: 16px;
+  color: var(--text2);
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0 auto 40px;
+}
+
+.landing-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 40px;
+  text-align: left;
+  max-width: 300px;
+  width: 100%;
+}
+
+.feat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text2);
+}
+
+.feat-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.feat-icon.g { background: rgba(0,200,150,0.15); }
+.feat-icon.b { background: rgba(14,165,233,0.15); }
+.feat-icon.y { background: rgba(251,191,36,0.15); }
+
+.btn-start {
+  width: 100%;
+  max-width: 300px;
+  padding: 18px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 32px var(--green-glow);
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.btn-start:active { transform: scale(0.97); }
+
+.landing-disclaimer {
+  font-size: 11px;
+  color: var(--text3);
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════
+   ONBOARDING SCREEN
+══════════════════════════════════════ */
+#screen-onboard {
+  padding: 0;
+}
+
+.onboard-header {
+  padding: 20px 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-back {
+  width: 38px; height: 38px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.onboard-step-label {
+  font-size: 13px;
+  color: var(--text3);
+  font-weight: 500;
+}
+
+.onboard-body {
+  flex: 1;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.onboard-q {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.onboard-sub {
+  font-size: 14px;
+  color: var(--text2);
+  margin-bottom: 28px;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.option-btn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.option-btn .opt-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+.option-btn .opt-label { font-size: 13px; font-weight: 600; }
+.option-btn .opt-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+.option-btn.selected {
+  border-color: var(--green);
+  background: rgba(0,200,150,0.1);
+}
+
+.option-btn:active { transform: scale(0.97); }
+
+.input-field {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 12px;
+}
+
+.input-field:focus { border-color: var(--green); }
+.input-field::placeholder { color: var(--text3); }
+
+.btn-next {
+  margin-top: auto;
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 24px var(--green-glow);
+  transition: all 0.2s;
+}
+
+.btn-next:disabled { opacity: 0.4; }
+.btn-next:active:not(:disabled) { transform: scale(0.97); }
+
+/* ══════════════════════════════════════
+   CHAT SCREEN
+══════════════════════════════════════ */
+#screen-chat {
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 16px 16px 12px;
+  background: rgba(5,15,13,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.chat-avatar {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.chat-header-info { flex: 1; }
+.chat-header-name { font-size: 16px; font-weight: 700; }
+.chat-header-status {
+  font-size: 12px;
+  color: var(--green);
+  display: flex; align-items: center; gap: 5px;
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.btn-new-chat {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text2);
+  font-size: 12px;
+  font-family: var(--font);
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+/* Messages */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+.chat-messages::-webkit-scrollbar { width: 0; }
+
+.msg {
+  max-width: 85%;
+  animation: msg-in 0.3s ease;
+}
+
+@keyframes msg-in {
+  from { opacity:0; transform: translateY(8px); }
+  to { opacity:1; transform: translateY(0); }
+}
+
+.msg.bot { align-self: flex-start; }
+.msg.user { align-self: flex-end; }
+
+.msg-bubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.msg.bot .msg-bubble {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 6px;
+  color: var(--text);
+}
+
+.msg.user .msg-bubble {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+
+.msg-time {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+  padding: 0 4px;
+}
+
+.msg.user .msg-time { text-align: right; }
+
+/* Status badges in messages */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 8px 0 4px;
+}
+
+.status-badge.green { background: rgba(0,200,150,0.15); color: var(--green); border: 1px solid rgba(0,200,150,0.3); }
+.status-badge.yellow { background: rgba(251,191,36,0.15); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+.status-badge.red { background: rgba(244,63,94,0.15); color: var(--red); border: 1px solid rgba(244,63,94,0.3); }
+
+/* Quick replies */
+.quick-replies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 16px 8px;
+  flex-shrink: 0;
+}
+
+.quick-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text2);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.quick-btn:active { background: var(--card-hover); border-color: var(--green); color: var(--green); }
+
+/* Typing indicator */
+.typing-indicator {
+  display: none;
+  align-self: flex-start;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  border-bottom-left-radius: 6px;
+  padding: 14px 18px;
+  gap: 5px;
+  align-items: center;
+}
+
+.typing-indicator.show { display: flex; }
+
+.typing-dot {
+  width: 7px; height: 7px;
+  background: var(--text3);
+  border-radius: 50%;
+  animation: typing 1.2s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* Input area */
+.chat-input-area {
+  padding: 12px 16px 20px;
+  background: rgba(5,15,13,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.chat-textarea {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  outline: none;
+  resize: none;
+  max-height: 120px;
+  line-height: 1.4;
+  transition: border-color 0.2s;
+}
+
+.chat-textarea:focus { border-color: var(--green); }
+.chat-textarea::placeholder { color: var(--text3); }
+
+.btn-send {
+  width: 46px; height: 46px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px var(--green-glow);
+  transition: all 0.15s;
+}
+
+.btn-send:active { transform: scale(0.93); }
+.btn-send:disabled { opacity: 0.4; }
+
+/* Image upload button */
+.btn-image {
+  width: 46px; height: 46px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text2);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.btn-image:active { background: var(--card-hover); border-color: var(--green); }
+
+/* Image preview */
+.image-preview-wrap {
+  display: none;
+  padding: 8px 16px 0;
+  position: relative;
+  flex-shrink: 0;
+}
+.image-preview-wrap.show { display: block; }
+.image-preview {
+  width: 80px; height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid var(--green);
+}
+.image-preview-remove {
+  position: absolute;
+  top: 4px; left: 72px;
+  width: 22px; height: 22px;
+  background: var(--red);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* PWA banner always visible for iOS */
+.pwa-ios-tip {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 14px 20px 28px;
+  z-index: 40;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text2);
+  animation: slide-up 0.4s ease;
+}
+.pwa-ios-tip.show { display: block; }
+.pwa-ios-tip strong { color: var(--text); }
+
+/* ══════════════════════════════════════
+   DISCLAIMER MODAL
+══════════════════════════════════════ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  align-items: flex-end;
+  padding: 0;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 28px 28px 0 0;
+  padding: 28px 24px 36px;
+  width: 100%;
+  animation: slide-up 0.3s ease;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-icon { font-size: 40px; margin-bottom: 16px; }
+.modal-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.modal-text { font-size: 14px; color: var(--text2); line-height: 1.65; margin-bottom: 24px; }
+
+.modal-points {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.modal-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.modal-point-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.btn-agree {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ══════════════════════════════════════
+   SIDEBAR - Conversations History
+══════════════════════════════════════ */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+}
+.sidebar-overlay.show { display: block; }
+
+.sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 82vw;
+  max-width: 320px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  z-index: 51;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+}
+.sidebar.open { transform: translateX(0); }
+
+.sidebar-head {
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar-title { font-size: 18px; font-weight: 700; }
+.sidebar-close {
+  width: 34px; height: 34px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text2);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.sidebar-new-btn {
+  margin: 12px 16px;
+  width: calc(100% - 32px);
+  padding: 13px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sidebar-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+}
+.sidebar-list::-webkit-scrollbar { width: 0; }
+
+.conv-item {
+  padding: 12px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.conv-item:hover { background: var(--card); }
+.conv-item.active {
+  background: rgba(0,200,150,0.1);
+  border-color: rgba(0,200,150,0.2);
+}
+.conv-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conv-item-preview {
+  font-size: 12px;
+  color: var(--text3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conv-item-date {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+.sidebar-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text3);
+  font-size: 14px;
+}
+.sidebar-empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+/* ══════════════════════════════════════
+   PWA INSTALL BANNER
+══════════════════════════════════════ */
+.pwa-banner {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 16px 20px 28px;
+  z-index: 40;
+  animation: slide-up 0.4s ease;
+}
+.pwa-banner.show { display: flex; align-items: center; gap: 14px; }
+
+.pwa-banner-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.pwa-banner-info { flex: 1; }
+.pwa-banner-title { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.pwa-banner-sub { font-size: 12px; color: var(--text2); }
+.pwa-banner-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+.btn-install {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-install-dismiss {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-family: var(--font);
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Hamburger menu btn */
+.btn-menu {
+  width: 38px; height: 38px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LANDING ═══════════════ -->
+<div class="screen active" id="screen-landing">
+
+  <!-- Slideshow Background -->
+  <div class="slide-bg">
+    <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=800&q=80')"></div>
+    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80')"></div>
+    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80')"></div>
+    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=800&q=80')"></div>
+    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80')"></div>
+    <div class="slide-overlay"></div>
+  </div>
+
+  <div class="landing-logo">🩺</div>
+  <div class="landing-badge">Bure Kabisa • Kiswahili</div>
+  <h1 class="landing-title">Daktari<br>Mfukoni Wako</h1>
+  <p class="landing-sub">Pata ushauri wa afya kwa Kiswahili — haraka, salama, bila foleni.</p>
+
+  <div class="landing-features">
+    <div class="feat-item">
+      <div class="feat-icon g">💬</div>
+      <div>
+        <div style="font-weight:600;color:var(--text);font-size:13px">Zungumza Kiswahili</div>
+        <div style="font-size:12px">Elezea dalili kwa lugha yako</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon b">⚡</div>
+      <div>
+        <div style="font-weight:600;color:var(--text);font-size:13px">Jibu la Haraka</div>
+        <div style="font-size:12px">Sekunde 10 — bila kusubiri</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon y">🚨</div>
+      <div>
+        <div style="font-weight:600;color:var(--text);font-size:13px">Ishara za Hatari</div>
+        <div style="font-size:12px">Inakuambia lini nenda hospitali</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-start" onclick="showDisclaimer()">Anza Sasa →</button>
+  <p class="landing-disclaimer">⚕️ Hii si huduma ya daktari wa kweli. Kwa dharura piga simu 112 au nenda hospitali.</p>
+
+  <!-- Slide dots -->
+  <div class="slide-dots" id="slide-dots"></div>
+</div>
+
+<!-- ═══════════════ DISCLAIMER MODAL ═══════════════ -->
+<div class="modal-overlay" id="modal-disclaimer">
+  <div class="modal-box">
+    <div class="modal-icon">⚕️</div>
+    <div class="modal-title">Kabla Hujaanza</div>
+    <p class="modal-text">Afya Yangu ni chanzo cha taarifa za afya — si badala ya daktari wa kweli.</p>
+    <div class="modal-points">
+      <div class="modal-point">
+        <div class="modal-point-icon">✅</div>
+        <div>Inakusaidia kuelewa dalili na hatua za kwanza</div>
+      </div>
+      <div class="modal-point">
+        <div class="modal-point-icon">✅</div>
+        <div>Inakuambia lini hali yako ni ya haraka</div>
+      </div>
+      <div class="modal-point">
+        <div class="modal-point-icon">❌</div>
+        <div>Haiwezi kuchunguza au kutoa dawa rasmi</div>
+      </div>
+      <div class="modal-point">
+        <div class="modal-point-icon">🚨</div>
+        <div>Dharura — piga 112 au nenda hospitali mara moja</div>
+      </div>
+    </div>
+    <button class="btn-agree" onclick="agreeAndStart()">Naelewa — Endelea →</button>
+  </div>
+</div>
+
+<!-- ═══════════════ ONBOARDING ═══════════════ -->
+<div class="screen" id="screen-onboard">
+  <div class="onboard-header">
+    <button class="btn-back" onclick="goBack()">←</button>
+    <span class="onboard-step-label" id="step-label">Hatua 1 ya 2</span>
+  </div>
+  <div class="onboard-body">
+    <!-- Step 1: Umri -->
+    <div id="onboard-step-1">
+      <div class="onboard-q">Una umri gani?</div>
+      <div class="onboard-sub">Tunahitaji hii kukupa ushauri sahihi zaidi</div>
+      <div class="option-grid">
+        <button class="option-btn" onclick="selectAge('Mtoto (0-12)')">
+          <span class="opt-icon">👶</span>
+          <span class="opt-label">Mtoto</span>
+          <span class="opt-sub">Miaka 0–12</span>
+        </button>
+        <button class="option-btn" onclick="selectAge('Kijana (13-17)')">
+          <span class="opt-icon">🧒</span>
+          <span class="opt-label">Kijana</span>
+          <span class="opt-sub">Miaka 13–17</span>
+        </button>
+        <button class="option-btn" onclick="selectAge('Mtu mzima (18-59)')">
+          <span class="opt-icon">🧑</span>
+          <span class="opt-label">Mtu Mzima</span>
+          <span class="opt-sub">Miaka 18–59</span>
+        </button>
+        <button class="option-btn" onclick="selectAge('Mzee (60+)')">
+          <span class="opt-icon">👴</span>
+          <span class="opt-label">Mzee</span>
+          <span class="opt-sub">Miaka 60+</span>
+        </button>
+      </div>
+      <button class="btn-next" id="btn-next-1" disabled onclick="goToStep2()">Endelea →</button>
+    </div>
+
+    <!-- Step 2: Jina -->
+    <div id="onboard-step-2" style="display:none">
+      <div class="onboard-q">Jina lako ni nini?</div>
+      <div class="onboard-sub">Ili nizungumze nawe kwa urafiki zaidi</div>
+      <input type="text" class="input-field" id="input-name" placeholder="Andika jina lako..." oninput="checkName()">
+      <button class="btn-next" id="btn-next-2" disabled onclick="startChat()">Anza Mazungumzo →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CHAT ═══════════════ -->
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <div class="sidebar-title">💬 Mazungumzo</div>
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+  </div>
+  <button class="sidebar-new-btn" onclick="closeSidebar(); newChat()">
+    ✏️ Mazungumzo Mapya
+  </button>
+  <div class="sidebar-list" id="sidebar-list">
+    <div class="sidebar-empty">
+      <div class="sidebar-empty-icon">💬</div>
+      Hakuna mazungumzo bado
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PWA BANNER ═══════════════ -->
+<div class="pwa-banner" id="pwa-banner">
+  <div class="pwa-banner-icon">🩺</div>
+  <div class="pwa-banner-info">
+    <div class="pwa-banner-title">Weka Afya Yangu</div>
+    <div class="pwa-banner-sub">Ifanye kama app kwenye simu yako</div>
+  </div>
+  <div class="pwa-banner-actions">
+    <button class="btn-install" onclick="installPWA()">📲 Weka</button>
+    <button class="btn-install-dismiss" onclick="dismissPWA()">Baadaye</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-chat">
+  <div class="chat-header">
+    <button class="btn-menu" onclick="openSidebar()">☰</button>
+    <div class="chat-avatar">🩺</div>
+    <div class="chat-header-info">
+      <div class="chat-header-name">Daktari Afya</div>
+      <div class="chat-header-status">
+        <div class="status-dot"></div>
+        Yuko tayari kukusaidia
+      </div>
+    </div>
+    <button class="btn-new-chat" onclick="newChat()">+ Mpya</button>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <div class="typing-indicator" id="typing">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+  </div>
+
+  <div class="quick-replies" id="quick-replies"></div>
+
+  <!-- Image preview area -->
+  <div class="image-preview-wrap" id="image-preview-wrap">
+    <img class="image-preview" id="image-preview" src="" alt="Picha">
+    <button class="image-preview-remove" onclick="removeImage()">✕</button>
+  </div>
+
+  <div class="chat-input-area">
+    <button class="btn-image" onclick="document.getElementById('image-input').click()" title="Piga picha au chagua">📷</button>
+    <input type="file" id="image-input" accept="image/*" style="display:none" onchange="handleImageSelect(event)">
+    <textarea class="chat-textarea" id="chat-input" placeholder="Elezea dalili au piga picha..." rows="1"
+      oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+    <button class="btn-send" id="btn-send" onclick="sendMessage()">↑</button>
+  </div>
+</div>
+
+<!-- iOS PWA tip -->
+<div class="pwa-ios-tip" id="pwa-ios-tip">
+  📲 Weka app kwenye simu yako — bonyeza <strong>Share</strong> kisha <strong>"Add to Home Screen"</strong>
+  <br><button onclick="document.getElementById('pwa-ios-tip').classList.remove('show')" 
+    style="margin-top:8px;background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer">Funga</button>
+</div>
+
+<script>
+const BACKEND = 'https://afyayangu-backend.onrender.com';
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_KEY = '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'; // ← Weka Groq API key yako
+
+let userProfile = { name: '', age: '' };
+let chatHistory = [];
+let isTyping = false;
+let currentConvId = null;
+let deferredPrompt = null;
+let selectedImageBase64 = null;
+
+// ══ CONVERSATIONS STORAGE ══
+function getAllConversations() {
+  try {
+    return JSON.parse(localStorage.getItem('afya_conversations') || '[]');
+  } catch { return []; }
+}
+
+function saveConversation() {
+  if (!chatHistory.length || !currentConvId) return;
+  const convs = getAllConversations();
+  const idx = convs.findIndex(c => c.id === currentConvId);
+  const firstUserMsg = chatHistory.find(m => m.role === 'user')?.content || 'Mazungumzo mapya';
+  const conv = {
+    id: currentConvId,
+    title: firstUserMsg.length > 40 ? firstUserMsg.substring(0, 40) + '...' : firstUserMsg,
+    preview: chatHistory[chatHistory.length - 1]?.content?.substring(0, 60) || '',
+    date: new Date().toISOString(),
+    history: chatHistory,
+    userProfile: { ...userProfile }
+  };
+  if (idx >= 0) convs[idx] = conv;
+  else convs.unshift(conv);
+  // Keep max 50 conversations
+  if (convs.length > 50) convs.splice(50);
+  localStorage.setItem('afya_conversations', JSON.stringify(convs));
+  renderSidebarList();
+}
+
+function loadConversation(id) {
+  const convs = getAllConversations();
+  const conv = convs.find(c => c.id === id);
+  if (!conv) return;
+  currentConvId = conv.id;
+  chatHistory = conv.history;
+  userProfile = conv.userProfile;
+  closeSidebar();
+  showScreen('screen-chat');
+
+  // Re-render messages
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = `
+    <div class="typing-indicator" id="typing">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+
+  chatHistory.forEach(m => {
+    if (m.role === 'user') addUserMessage(m.content, false);
+    else if (m.role === 'assistant') addBotMessage(m.content, false);
+  });
+  renderSidebarList();
+  scrollBottom();
+}
+
+function renderSidebarList() {
+  const list = document.getElementById('sidebar-list');
+  const convs = getAllConversations();
+  if (!convs.length) {
+    list.innerHTML = `<div class="sidebar-empty"><div class="sidebar-empty-icon">💬</div>Hakuna mazungumzo bado</div>`;
+    return;
+  }
+  list.innerHTML = convs.map(c => {
+    const date = new Date(c.date);
+    const dateStr = date.toLocaleDateString('sw', { day: 'numeric', month: 'short' });
+    const isActive = c.id === currentConvId;
+    return `<div class="conv-item ${isActive ? 'active' : ''}" onclick="loadConversation('${c.id}')">
+      <div class="conv-item-title">${c.title}</div>
+      <div class="conv-item-preview">${c.preview}</div>
+      <div class="conv-item-date">${dateStr}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ SIDEBAR ══
+function openSidebar() {
+  renderSidebarList();
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+// ══ PWA ══
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Show banner after 3 seconds — daima, bila kujali kama amefuta
+  setTimeout(() => {
+    document.getElementById('pwa-banner').classList.add('show');
+  }, 3000);
+});
+
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then((choice) => {
+    deferredPrompt = null;
+    dismissPWA();
+  });
+}
+
+function dismissPWA() {
+  document.getElementById('pwa-banner').classList.remove('show');
+}
+
+window.addEventListener('appinstalled', () => {
+  dismissPWA();
+});
+
+// iOS detection — ionyeshe tip ya "Add to Home Screen"
+function checkiOS() {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone;
+  if (isIOS && !isStandalone) {
+    setTimeout(() => {
+      document.getElementById('pwa-ios-tip').classList.add('show');
+    }, 4000);
+  }
+}
+checkiOS();
+
+// ══ NAVIGATION ══
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showDisclaimer() {
+  document.getElementById('modal-disclaimer').classList.add('show');
+}
+
+function agreeAndStart() {
+  document.getElementById('modal-disclaimer').classList.remove('show');
+  showScreen('screen-onboard');
+}
+
+function goBack() {
+  const step2 = document.getElementById('onboard-step-2');
+  if (step2.style.display !== 'none') {
+    step2.style.display = 'none';
+    document.getElementById('onboard-step-1').style.display = 'block';
+    document.getElementById('step-label').textContent = 'Hatua 1 ya 2';
+  } else {
+    showScreen('screen-landing');
+  }
+}
+
+// ══ ONBOARDING ══
+function selectAge(age) {
+  userProfile.age = age;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  document.getElementById('btn-next-1').disabled = false;
+}
+
+function goToStep2() {
+  document.getElementById('onboard-step-1').style.display = 'none';
+  document.getElementById('onboard-step-2').style.display = 'block';
+  document.getElementById('step-label').textContent = 'Hatua 2 ya 2';
+  document.getElementById('input-name').focus();
+}
+
+function checkName() {
+  const val = document.getElementById('input-name').value.trim();
+  document.getElementById('btn-next-2').disabled = val.length < 2;
+}
+
+function startChat() {
+  userProfile.name = document.getElementById('input-name').value.trim();
+  chatHistory = [];
+  currentConvId = 'conv_' + Date.now();
+  showScreen('screen-chat');
+  document.getElementById('chat-messages').innerHTML = `
+    <div class="typing-indicator" id="typing">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+  `;
+  // Welcome message
+  setTimeout(() => {
+    addBotMessage(`Habari ${userProfile.name}! 👋\n\nMimi ni msaidizi wako wa afya. Niambie — leo una tatizo gani la afya? Elezea dalili zako kwa uhuru, nitakusaidia kuelewa.`);
+    showQuickReplies(['🤒 Nina homa', '🤢 Maumivu ya tumbo', '🤕 Maumivu ya kichwa', '😮‍💨 Matatizo ya kupumua', '🦟 Nadhani malaria', '💊 Swali la dawa']);
+  }, 1000);
+}
+
+function newChat() {
+  saveConversation();
+  chatHistory = [];
+  currentConvId = 'conv_' + Date.now();
+  document.getElementById('chat-messages').innerHTML = `
+    <div class="typing-indicator" id="typing">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+  document.getElementById('quick-replies').innerHTML = '';
+  setTimeout(() => {
+    addBotMessage(`Sawa ${userProfile.name}! Mazungumzo mapya. Una tatizo gani la afya leo? 🩺`);
+    showQuickReplies(['🤒 Nina homa', '🤢 Maumivu ya tumbo', '🤕 Maumivu ya kichwa', '😮‍💨 Matatizo ya kupumua', '🦟 Nadhani malaria', '💊 Swali la dawa']);
+  }, 500);
+}
+
+// ══ CHAT ══
+function addBotMessage(text, animate = true) {
+  hideTyping();
+  const msgs = document.getElementById('chat-messages');
+  const time = new Date().toLocaleTimeString('sw', { hour: '2-digit', minute: '2-digit' });
+
+  // Format text — bold **text**, newlines, status badges
+  let formatted = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>')
+    .replace(/🟢(.*?)(<br>|$)/g, '<br><span class="status-badge green">🟢$1</span>')
+    .replace(/🟡(.*?)(<br>|$)/g, '<br><span class="status-badge yellow">🟡$1</span>')
+    .replace(/🔴(.*?)(<br>|$)/g, '<br><span class="status-badge red">🔴$1</span>');
+
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = `
+    <div class="msg-bubble">${formatted}</div>
+    <div class="msg-time">${time}</div>
+  `;
+  msgs.insertBefore(div, document.getElementById('typing'));
+  scrollBottom();
+}
+
+function addUserMessage(text, animate = true) {
+  const msgs = document.getElementById('chat-messages');
+  const time = new Date().toLocaleTimeString('sw', { hour: '2-digit', minute: '2-digit' });
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.innerHTML = `
+    <div class="msg-bubble">${text}</div>
+    <div class="msg-time">${time}</div>
+  `;
+  msgs.insertBefore(div, document.getElementById('typing'));
+  scrollBottom();
+}
+
+function showTyping() {
+  document.getElementById('typing').classList.add('show');
+  scrollBottom();
+}
+
+function hideTyping() {
+  document.getElementById('typing').classList.remove('show');
+}
+
+function scrollBottom() {
+  const msgs = document.getElementById('chat-messages');
+  setTimeout(() => msgs.scrollTop = msgs.scrollHeight, 100);
+}
+
+function showQuickReplies(options) {
+  const container = document.getElementById('quick-replies');
+  container.innerHTML = options.map(o =>
+    `<button class="quick-btn" onclick="quickSend('${o}')">${o}</button>`
+  ).join('');
+}
+
+function quickSend(text) {
+  document.getElementById('quick-replies').innerHTML = '';
+  processMessage(text);
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || isTyping) return;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('quick-replies').innerHTML = '';
+  processMessage(text);
+}
+
+// ══ IMAGE HANDLING ══
+function handleImageSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    selectedImageBase64 = ev.target.result.split(',')[1]; // base64 only
+    document.getElementById('image-preview').src = ev.target.result;
+    document.getElementById('image-preview-wrap').classList.add('show');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = ''; // reset input
+}
+
+function removeImage() {
+  selectedImageBase64 = null;
+  document.getElementById('image-preview-wrap').classList.remove('show');
+  document.getElementById('image-preview').src = '';
+}
+
+async function processMessage(text) {
+  const hasImage = !!selectedImageBase64;
+  const displayText = hasImage && !text ? '📷 Nimetuma picha' : text;
+
+  addUserMessage(displayText);
+  if (hasImage) {
+    // Show image in chat
+    const msgs = document.getElementById('chat-messages');
+    const imgDiv = document.createElement('div');
+    imgDiv.className = 'msg user';
+    imgDiv.innerHTML = `<img src="data:image/jpeg;base64,${selectedImageBase64}" 
+      style="max-width:200px;border-radius:14px;border:2px solid var(--green);display:block">`;
+    msgs.insertBefore(imgDiv, document.getElementById('typing'));
+  }
+
+  isTyping = true;
+  document.getElementById('btn-send').disabled = true;
+  showTyping();
+
+  const systemPrompt = `Wewe ni daktari rafiki wa Kitanzania. Unazungumza Kiswahili cha kawaida — kama unavyozungumza na ndugu yako wa karibu.
+
+Mtumiaji: ${userProfile.name}, Umri: ${userProfile.age}
+
+JINSI YA KUZUNGUMZA:
+- Zungumza moja kwa moja, fupi, kwa upole
+- Tumia maneno ya kawaida ya Kiswahili — "bora", "jaribu", "unaweza", "naona", "inaonekana"
+- USITUMIE: "zinaonyesha", "uwezekano", "inashauriwa", "kituo cha afya", maneno ya kitabu
+- Sentensi fupi — maneno 15-20 kwa sentensi
+
+MFANO WA JIBU ZURI:
+"Naona una homa na baridi — hii inaweza kuwa malaria au flu.
+Kwanza jaribu dawa za homa kama paracetamol.
+🟡 Nenda duka la dawa — chukua dawa na upimwe malaria.
+Kama hali itazidi kesho — nenda hospitali mara moja."
+
+SHERIA:
+1. Kama una picha — ielezee unavyoona, kisha toa ushauri
+2. Toa hukumu moja wazi: 🟢 pumzika nyumbani / 🟡 nenda duka la dawa / 🔴 nenda hospitali SASA
+3. Jibu fupi — mistari 4-5 tu
+4. Mwisho: "⚕️ Hii si ushauri wa daktari wa kweli — kwa hali mbaya nenda hospitali."
+5. Dharura: "Piga 112 au nenda hospitali SASA HIVI!"`;
+
+  try {
+    let userContent;
+
+    if (hasImage) {
+      // Vision request with image
+      userContent = [
+        {
+          type: 'text',
+          text: text || 'Tafadhali angalia picha hii na niambie tatizo ni nini na ushauri wako.'
+        },
+        {
+          type: 'image_url',
+          image_url: {
+            url: `data:image/jpeg;base64,${selectedImageBase64}`
+          }
+        }
+      ];
+      chatHistory.push({ role: 'user', content: text || 'Nimetuma picha ya tatizo langu.' });
+    } else {
+      userContent = text;
+      chatHistory.push({ role: 'user', content: text });
+    }
+
+    const messages = hasImage
+      ? [{ role: 'system', content: systemPrompt }, { role: 'user', content: userContent }]
+      : [{ role: 'system', content: systemPrompt }, ...chatHistory];
+
+    const model = hasImage ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'llama-3.3-70b-versatile';
+
+    const response = await fetch(GROQ_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${GROQ_KEY}`
+      },
+      body: JSON.stringify({ model, max_tokens: 500, messages })
+    });
+
+    const data = await response.json();
+    const reply = data.choices?.[0]?.message?.content || 'Samahani, jaribu tena.';
+    chatHistory.push({ role: 'assistant', content: reply });
+    addBotMessage(reply);
+    saveConversation();
+
+    // Remove image after sending
+    removeImage();
+
+    showQuickReplies(['✅ Asante, nimeelewa', '❓ Niulize zaidi', '💊 Dawa gani?', '🏥 Hospitali iko wapi?']);
+
+  } catch (err) {
+    addBotMessage('Samahani, kuna tatizo la mtandao. Jaribu tena. 🙏');
+    removeImage();
+  }
+
+  isTyping = false;
+  document.getElementById('btn-send').disabled = false;
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ══ SLIDESHOW ══
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('slide-dots');
+  let current = 0;
+
+  // Create dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+    dotsContainer.appendChild(dot);
+  });
+
+  function goSlide(n) {
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+  }
+
+  setInterval(() => goSlide(current + 1), 4000);
+})();
+
+// ── SERVICE WORKER (PWA) ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/afyayangu/sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
